@@ -1,0 +1,4 @@
+interface:
+  display_name: "剧本开发"
+  short_description: "用七步流程完成剧本方向、大纲、审稿、项目档案和复用约束"
+  default_prompt: "Use $script-development-zh to develop a short animation script from concept to locked outline."
