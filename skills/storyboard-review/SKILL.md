@@ -1,9 +1,6 @@
 ---
 name: "storyboard-review"
 description: "分镜二次审查（双 Agent 协作）：主 agent 写分镜/提示词 → 审查 agent B 6 维对标剧本 → 自动迭代直到零遗漏。"
-version: "v3"
-date: "2026-07-01"
-runtime: subagent
 allowed-tools:
   - lark-cli
   - exec
@@ -16,6 +13,10 @@ allowed-tools:
 ---
 
 # 分镜二次审查（双 Agent 协作）
+
+版本：v3
+日期：2026-07-01
+运行方式：subagent
 
 > **核心**：主 agent 写分镜/提示词后，spawn 独立审查 agent B 做 6 维对标，自动迭代直到无遗漏或满 3 轮。**剧本→分镜、分镜→提示词两阶段都用这个 skill。**
 
