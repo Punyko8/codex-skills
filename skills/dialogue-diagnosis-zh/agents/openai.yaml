@@ -1,0 +1,4 @@
+interface:
+  display_name: "台词诊断"
+  short_description: "逐句诊断剧本台词的问题、改写建议、角色语感和修改理由"
+  default_prompt: "Use $dialogue-diagnosis-zh to diagnose and improve the dialogue in this script."

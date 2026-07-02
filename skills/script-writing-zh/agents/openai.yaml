@@ -1,0 +1,4 @@
+interface:
+  display_name: "剧本写作"
+  short_description: "把项目档案和大纲扩写为标准影视剧本或小说化完整剧本"
+  default_prompt: "Use $script-writing-zh to write a complete script from a project archive and locked outline."

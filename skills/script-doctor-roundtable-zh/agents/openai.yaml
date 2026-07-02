@@ -1,0 +1,4 @@
+interface:
+  display_name: "剧本医生圆桌"
+  short_description: "召集行业评委对剧本进行圆桌会诊、证据批评和问题归纳"
+  default_prompt: "Use $script-doctor-roundtable-zh to run a roundtable diagnosis on this script."
