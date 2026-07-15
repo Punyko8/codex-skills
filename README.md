@@ -15,13 +15,10 @@ Personal Codex skill collection.
 
 - `skills/first-principles-storyboard` — 第一性原理分镜：基于感知规律设计分镜，并用双 Agent 闭环质检。
 - `skills/storyboard-review` — 分镜二次审查：对剧本到分镜、分镜到提示词做自动补漏审查循环。
+- `skills/toffee-family-storyboard` — **Toffee Family 专用**：儿童剧分镜，控制儿童眼高、景别边界、连续镜头合并、时间证据和双 Agent 质检。
 
 ### 视频生成
 
 - `skills/seedance-prompt-zh` — Seedance 中文提示词：为即梦 Seedance 2.0 编写分镜、图生视频和声音提示词。
 - `skills/seedance2-prompt-skill` — MapleShaw Seedance 2.0 prompt skill 副本：完整保留上游多模态视频提示词方法论。
-
-### Toffee Family 专用
-
-- `skills/toffee-family-storyboard` — Toffee Family 儿童剧分镜：控制儿童眼高、景别边界、连续镜头合并、时间证据和双 Agent 质检。
-- `skills/toffee-family-seedance-prompt-zh` — Toffee Family Seedance 中文提示词：逐镜生成可复制提示词，强制无 BGM，仅保留对白、旁白与音效。
+- `skills/toffee-family-seedance-prompt-zh` — **Toffee Family 专用**：Seedance 中文提示词，逐镜生成可复制提示词，强制无 BGM，仅保留对白、旁白与音效。
