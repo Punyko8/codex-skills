@@ -165,6 +165,21 @@ Format each code block for direct copying:
 4. Put non-dialogue sound effects in a separate paragraph.
 5. Put shot-local constraints and the mandatory audio red line at the end.
 
+### Mandatory observable animal-pose wording
+
+Write animal-pose constraints as visible actions and support states, not as translated anatomy abstractions.
+
+- Never write `保持真实四足骨骼`, `真实四足结构`, `符合真实解剖`, or similar wording. These phrases do not tell the video model what must be visible.
+- Match the instruction to the current action instead of forcing `保持四足站立` into every shot:
+  - Standing: `保持自然四足站姿，不双足直立。`
+  - Sitting: `保持自然坐姿，不双足直立。`
+  - Running: `四爪着地自然跑动，不双足奔跑。`
+  - Raising one forepaw: `抬起单只前爪时，其余三只爪稳定支撑身体，不双足直立。`
+  - Operating a prop: `只抬起单只前爪操作道具，其余爪支撑身体，不出现类人手掌。`
+- Describe a proportion reference by its visible controls, such as `自然体型、四肢长度和站立高度比例`; do not label it only as `真实四足骨骼`.
+- Remove translation-like fillers such as `自然前爪`; write `前爪` and state the support relationship when it matters.
+- Before delivery, scan every prompt and the self-check text for abstract anatomy phrases, then replace each one with the exact visible pose, contact point, weight support, movement, or prohibited posture for that shot.
+
 ## Camera and Motion Checklist
 
 For every important action, specify:
@@ -326,7 +341,8 @@ When writing a Seedance prompt:
 12. Run the standalone-context scan: remove document-level references and rewrite every cross-shot phrase as an explicit current-frame state.
 13. Run the reference-placement scan: move stable character, clothing, accessory, and initial prop details to the beginning of each code block; remove redundant copies from timed action paragraphs.
 14. Run the layout scan: require reference setup, camera, every time range, sound effects, and constraints to start on separate lines or paragraphs.
-15. Keep the final prompt directly usable, not an explanation.
+15. Run the observable-pose scan: remove translated anatomy abstractions and state the visible stance, moving paws, supporting paws, and prohibited posture for each animal action.
+16. Keep the final prompt directly usable, not an explanation.
 
 ## Prompt Templates
 
@@ -427,6 +443,7 @@ Style: clean educational CGI, readable structure, no gore, no confusing labels u
 17. Appearance duplication: put stable character appearance, clothing, accessories, and initial prop state in the opening reference description; do not restate them inside every timed action paragraph.
 18. Document-level meta instructions: remove phrases such as `本文按以下顺序上传参考图`, `严格遵循基础设定`, or `见全局约束` from standalone prompts. Assign each current asset directly.
 19. Dense code blocks: do not stack references, camera, multiple time ranges, sound, and constraints into one paragraph. Start every time range on a new line and separate sections with blank lines.
+20. Translated anatomy abstractions: do not write `保持真实四足骨骼`, `真实四足结构`, or `自然前爪`. State the current visible stance and which paws move or support the body.
 
 ## Final Response Format
 
