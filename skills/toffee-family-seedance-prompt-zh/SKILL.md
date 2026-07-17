@@ -1,6 +1,6 @@
 ---
 name: toffee-family-seedance-prompt-zh
-description: 为 Toffee Family 儿童剧编写和优化 Seedance 2.0 / 即梦中文逐镜视频提示词。用于分镜转提示词、参考素材分配、机位与动作时序、对白和音效设计、代码块交付及逐镜自检；默认强制禁止任何 BGM、背景音乐、氛围音乐、配乐、旋律、节拍和乐器声，只生成对白、旁白与明确音效。
+description: 为 Toffee Family 儿童剧编写和优化 Seedance 2.0 / 即梦中文逐镜视频提示词。用于分镜转提示词、参考素材分配、机位与动作时序、动作对白同一时码、音效设计、代码块交付及逐镜自检；默认强制禁止任何 BGM、背景音乐、氛围音乐、配乐、旋律、节拍和乐器声，只生成对白、旁白与明确音效。
 ---
 
 # Toffee Family Seedance 中文提示词 Skill
@@ -19,6 +19,7 @@ Prioritize:
 - Start and end frame changes for each beat.
 - Color and lighting continuity.
 - Dialogue, narration, sound effects, and timing.
+- Every dialogue or narration line embedded in the matching timed action paragraph, so speech, lip movement, expression, and physical action share one clock.
 - A mandatory no-music constraint in both the global rules and every standalone prompt.
 - Constraints that prevent unwanted characters, style drift, or action ambiguity.
 
@@ -120,7 +121,49 @@ Each segment should answer:
 - What is different at the end of the segment?
 - What sound supports the beat?
 
+### Mandatory dialogue-action binding
+
+- Put every exact character line directly inside the time-coded action paragraph in which the character performs it. The paragraph must describe the action, expression, gaze, or prop interaction and then state that the character says the exact line while performing that action.
+- Put narration inside the time-coded paragraph for the image it accompanies.
+- Do not create a separate `Dialogue`, `对白`, `声音与对白时序`, or equivalent section. Separating speech from action gives the video model two unrelated clocks and can break performance, lip sync, and timing.
+- Character dialogue must appear exactly once. Do not repeat the line in the sound section.
+- A standalone sound section may contain only ambient sound, Foley, breathing, laughter, reactions without lexical dialogue, and physically motivated action effects.
+- When several lines share one action beat, keep the original line boundaries and order inside that same timed paragraph. Use `先说……随后说……` when needed; never merge, shorten, rewrite, or paraphrase the lines.
+
+Bad:
+
+```text
+0-3s: 小吉抬起前爪并看向妈妈。
+对白：小吉说：“我们出发吧！”
+```
+
+Good:
+
+```text
+0-3s: 小吉抬起前爪并看向妈妈；完成动作的同时说：“我们出发吧！”（语气兴奋但不喊叫；对白逐字照读；说话时口鼻轻微自然开合，动作不中断）。
+```
+
 Avoid one long paragraph that chains many actions without timing.
+
+### Mandatory standalone-prompt isolation
+
+Treat every independently copyable prompt code block as the video model's entire available context. Never assume that it can see the document introduction, global settings, another shot, a previous generated clip, or prose outside the current code block.
+
+- Put every reference asset needed by the shot at the beginning of that shot's code block. State each asset's direct role without document-level meta wording such as `本文按以下顺序上传`, `参考前文`, `遵循基础设定`, or `见全局约束`.
+- Consolidate stable character appearance, clothing, accessories, and the shot's initial prop state into the opening reference-image description. Do not repeat those static details in the timed action paragraphs unless a visible change to that detail is the action itself.
+- Keep the opening reference description self-contained but concise. Describe only assets and visible anchors that constrain this shot; do not explain the production workflow or warn the model about unrelated source-image content unless a concrete exclusion is necessary for the current frame.
+- Never use cross-clip or backward-pointing phrases such as `继续`, `仍然`, `依旧`, `同前`, `沿用上一镜`, `上述动作`, `此时`, `随后继续`, `不要回到`, `不再`, or `保持上一镜状态` when their meaning depends on unseen context.
+- Rewrite history-dependent negatives as present-frame observable states. Example: replace `白色薄毯在地上（不要回到头上）` with `白色薄毯平铺在身体左侧地面，头部和颈部完全露出，没有毯子遮盖`.
+- Use explicit character names, objects, positions, directions, and current states instead of pronouns or ambiguous references when more than one subject is present.
+- Repeat only constraints required for independent execution, especially the mandatory audio red line. Do not repeat long visual-style boilerplate in every action paragraph.
+
+Format each code block for direct copying:
+
+1. Put the reference-image and current-state description first.
+2. Separate camera/lens instructions into their own paragraph.
+3. Put each time range on a new line and keep its complete action plus exact simultaneous dialogue in that paragraph.
+4. Put non-dialogue sound effects in a separate paragraph.
+5. Put shot-local constraints and the mandatory audio red line at the end.
 
 ## Camera and Motion Checklist
 
@@ -243,6 +286,7 @@ If dialogue is needed:
 - Assign the speaker.
 - Write the exact line.
 - Describe tone, volume, and timing.
+- Embed the line in the matching time-coded action paragraph; never move it into a separate dialogue or sound section.
 
 Example:
 
@@ -261,6 +305,8 @@ Before delivery, scan the full prompt text and require all of the following:
 3. No positive music cue remains, including wording such as “music rises,” “xylophone enters,” “detective music,” “warm score,” “drum beat,” or “theme music fades.”
 4. Every removed music cue is either deleted or replaced by dialogue, a physically motivated effect, breathing, or natural silence.
 5. Audio references are assigned only to voice or sound-effect roles.
+6. Every dialogue and narration line appears exactly once inside a time-coded action paragraph.
+7. No standalone dialogue section remains, and no dialogue is repeated under sound design.
 
 ## Workflow
 
@@ -272,11 +318,15 @@ When writing a Seedance prompt:
 4. Assign asset roles: character, first frame, scene, style, camera, action, edit timing, voice, and sound effects. Never assign a music role.
 5. Split by camera or action beats.
 6. For each beat, specify camera placement, camera movement, subject action, direction, speed, and frame change.
-7. Add color and lighting continuity.
-8. Add only dialogue, narration, ambience, Foley, and action effects; remove every positive music cue.
-9. Add the mandatory no-music constraint to the global rules and every standalone prompt.
-10. Run the per-prompt audio-count and zero-music-residue checks.
-11. Keep the final prompt directly usable, not an explanation.
+7. Embed each exact dialogue or narration line in the corresponding timed action beat. Bind speech to the simultaneous expression, gaze, lip movement, and physical action; never create a separate dialogue section.
+8. Add color and lighting continuity.
+9. Add a separate sound section containing only ambience, Foley, breathing, non-lexical reactions, and action effects; do not repeat dialogue there. Remove every positive music cue.
+10. Add the mandatory no-music constraint to the global rules and every standalone prompt.
+11. Run the dialogue-action binding, dialogue completeness, per-prompt audio-count, and zero-music-residue checks.
+12. Run the standalone-context scan: remove document-level references and rewrite every cross-shot phrase as an explicit current-frame state.
+13. Run the reference-placement scan: move stable character, clothing, accessory, and initial prop details to the beginning of each code block; remove redundant copies from timed action paragraphs.
+14. Run the layout scan: require reference setup, camera, every time range, sound effects, and constraints to start on separate lines or paragraphs.
+15. Keep the final prompt directly usable, not an explanation.
 
 ## Prompt Templates
 
@@ -289,12 +339,12 @@ Overall scene and style: [scene], [weather], [time of day], [visual style], [col
 
 Characters: [character 1 appearance and behavior], [character 2 appearance and behavior]. Keep their appearance consistent across all shots.
 
-0-3s: [opening shot, camera position, camera movement, character action, end-frame change].
-3-6s: [second beat, camera position, action, direction, end-frame change].
-6-10s: [main action, synchronized or sequential movement, expression, timing].
-10-15s: [resolution, final pose, final camera movement, final atmosphere].
+0-3s: [opening shot, camera position, camera movement, character action, end-frame change]; while performing the action, [speaker] says: "[exact dialogue]" ([tone, volume, natural pause, lip movement, action continues]).
+3-6s: [second beat, camera position, action, direction, end-frame change]; while performing the action, [speaker] says: "[exact dialogue]".
+6-10s: [main action, synchronized or sequential movement, expression, timing; embed any exact dialogue for this beat here].
+10-15s: [resolution, final pose, final camera movement, final atmosphere; embed any narration accompanying this image here].
 
-Sound design: [ambient sound], [Foley], [dialogue, narration, or reaction].
+Sound design: [ambient sound], [Foley], [breathing or non-lexical reaction], [physically motivated action effects]. Do not repeat dialogue here.
 
 Audio constraint: only generate dialogue, narration, ambient sound, Foley, and explicit action effects. Do not generate BGM, background music, atmospheric music, score, melody, beat, or instrument sound.
 
@@ -308,11 +358,11 @@ Use @Image1 as the main character appearance reference. Keep the same face shape
 
 Scene: [environment and lighting].
 
-0-3s: [camera and action].
-3-6s: [camera and action].
-6-10s: [camera and action].
+0-3s: [camera and action; while performing it, the character says the exact line for this beat].
+3-6s: [camera and action; embed the exact dialogue for this beat here].
+6-10s: [camera and action; embed the exact dialogue or narration for this beat here].
 
-Sound design: [ambient sound, Foley, dialogue, narration, and action effects]. Do not generate any music.
+Sound design: [ambient sound, Foley, breathing, non-lexical reactions, and action effects]. Do not repeat dialogue here. Do not generate any music.
 Constraints: maintain @Image1 character consistency, no extra characters, smooth motion.
 ```
 
@@ -321,12 +371,12 @@ Constraints: maintain @Image1 character consistency, no extra characters, smooth
 ```text
 Use @Image1 as the subject appearance reference. Reference @Video1 only for camera movement, action rhythm, and edit timing. Do not copy @Video1's character or setting unless requested.
 
-0-3s: [opening beat using referenced camera rhythm].
-3-6s: [second beat].
-6-10s: [main beat].
-10-15s: [ending beat].
+0-3s: [opening beat using referenced camera rhythm; embed the exact dialogue for this beat here].
+3-6s: [second beat; embed simultaneous dialogue here].
+6-10s: [main beat; embed simultaneous dialogue here].
+10-15s: [ending beat; embed accompanying narration here].
 
-Sound design: [dialogue and sound-effect plan]. If using @Audio1, use it only for voice tone or sound effects and ignore any music track. Do not generate any music.
+Sound design: [ambient sound, Foley, breathing, non-lexical reactions, and action effects]. Do not repeat dialogue here. If using @Audio1, use it only for voice tone or sound effects and ignore any music track. Do not generate any music.
 ```
 
 ### Template: Product Showcase
@@ -372,6 +422,11 @@ Style: clean educational CGI, readable structure, no gore, no confusing labels u
 12. Unwanted humans: explicitly say no human characters when the scene should contain only animals, objects, or stylized figures.
 13. Global-only audio restriction: repeat the mandatory no-music constraint inside every standalone prompt code block.
 14. Count mismatch: require prompt count = per-prompt audio-constraint count, plus one global constraint.
+15. Dialogue separated from action: never place exact lines in an independent dialogue/sound section. Put each line inside the simultaneous timed action paragraph and keep it there exactly once.
+16. Cross-shot context: never write `继续`, `仍然`, `同前`, `上一镜`, `上述`, `不要回到`, or similar wording that requires an unseen clip or document section. State the current visible condition directly.
+17. Appearance duplication: put stable character appearance, clothing, accessories, and initial prop state in the opening reference description; do not restate them inside every timed action paragraph.
+18. Document-level meta instructions: remove phrases such as `本文按以下顺序上传参考图`, `严格遵循基础设定`, or `见全局约束` from standalone prompts. Assign each current asset directly.
+19. Dense code blocks: do not stack references, camera, multiple time ranges, sound, and constraints into one paragraph. Start every time range on a new line and separate sections with blank lines.
 
 ## Final Response Format
 
@@ -382,3 +437,13 @@ For most user requests, provide:
 3. Optional variant only when it adds clear value.
 
 Keep explanations brief. Every prompt must be ready to paste into Seedance independently and must contain the mandatory no-music constraint.
+
+## Confirmed-change GitHub synchronization
+
+After the user confirms an adjustment to this Toffee Family skill, treat synchronization as part of completion:
+
+1. Validate the complete skill package locally.
+2. Mechanically sync this skill to `skills/toffee-family-seedance-prompt-zh/` in `Punyko8/codex-skills` without overwriting legacy or general-purpose Seedance skills.
+3. Inspect the repository diff and stage only the intended Toffee Family skill files and any directly required classification index change.
+4. Commit and push the confirmed change to the requested branch; when no branch is specified, use the repository's active Toffee Family publishing branch and report the branch and commit SHA.
+5. Do not stop after modifying the local installed copy. Completion requires a successful GitHub push unless authentication, permissions, or network access genuinely blocks it.
