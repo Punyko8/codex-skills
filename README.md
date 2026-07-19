@@ -16,6 +16,7 @@ Personal Codex skill collection.
 - `skills/first-principles-storyboard` — 第一性原理分镜：基于感知规律设计分镜，并用双 Agent 闭环质检。
 - `skills/storyboard-review` — 分镜二次审查：对剧本到分镜、分镜到提示词做自动补漏审查循环。
 - `skills/toffee-family-storyboard` — **Toffee Family 专用**：儿童剧分镜，控制儿童眼高、景别边界、连续镜头合并、时间证据和双 Agent 质检。
+- `skills/toffee-family-storyboard-image-prompts-zh` — **Toffee Family 专用**：从已有镜头号分镜文档生成低幼故事板图像提示词、宫格分段和四色调度箭头说明。
 
 ### 视频生成
 

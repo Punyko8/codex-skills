@@ -1,0 +1,7 @@
+interface:
+  display_name: "Toffee 故事板图像提示词"
+  short_description: "从分镜文档生成低幼故事板图像提示词包"
+  default_prompt: "Use $toffee-family-storyboard-image-prompts-zh to turn my numbered storyboard document and character references into Chinese GPTimage2 storyboard prompts."
+
+policy:
+  allow_implicit_invocation: true

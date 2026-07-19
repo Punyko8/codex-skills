@@ -11,18 +11,21 @@ Codex skill collection — 按工作流分 4 类：
 | `script-doctor-roundtable-zh` | 圆桌会诊（多视角行业诊断） |
 | `dialogue-diagnosis-zh` | 台词逐句诊断与改写 |
 
-## 🎞️ 分镜（2 个）
+## 🎞️ 分镜（4 个）
 
 | Skill | 用途 |
 |---|---|
 | `first-principles-storyboard` | 第一性原理分镜（双 Agent 闭环） |
 | `storyboard-review` | 分镜审查（主 agent + 审查 agent B） |
+| `toffee-family-storyboard` | Toffee Family 儿童剧分镜（儿童眼高、景别边界、双 Agent 质检） |
+| `toffee-family-storyboard-image-prompts-zh` | 从已有镜头号分镜文档生成故事板图像提示词、宫格分段和四色调度箭头 |
 
-## 🎥 提示词（项目专精，1 个）
+## 🎥 提示词（项目专精，2 个）
 
 | Skill | 用途 |
 |---|---|
 | `seedance-prompt-zh` | Seedance 2.0 中文视频提示词精写（含 9 条反模式） |
+| `toffee-family-seedance-prompt-zh` | Toffee Family 专用 Seedance 中文提示词（对白/旁白/音效控制） |
 
 ## 📚 提示词方法论（1 个）
 
@@ -44,11 +47,13 @@ Codex skill collection — 按工作流分 4 类：
    ↓ 定稿剧本
 分镜 (first-principles-storyboard → storyboard-review)
    ↓ 分镜表
-提示词精写 (seedance-prompt-zh)
+故事板图像提示词 (toffee-family-storyboard-image-prompts-zh)
+   ↓ 故事板图像 prompts
+提示词精写 (seedance-prompt-zh / toffee-family-seedance-prompt-zh)
    ↓ Seedance prompts
 ```
 
-## 8 个 skill 总览
+## 11 个 skill 总览
 
 | # | Skill | 分类 |
 |---|---|---|
@@ -58,5 +63,8 @@ Codex skill collection — 按工作流分 4 类：
 | 4 | `dialogue-diagnosis-zh` | 剧本 |
 | 5 | `first-principles-storyboard` | 分镜 |
 | 6 | `storyboard-review` | 分镜 |
-| 7 | `seedance-prompt-zh` | 提示词 |
-| 8 | `seedance2-prompt-skill` | 提示词方法论 |
+| 7 | `toffee-family-storyboard` | 分镜 |
+| 8 | `toffee-family-storyboard-image-prompts-zh` | 分镜 |
+| 9 | `seedance-prompt-zh` | 提示词 |
+| 10 | `toffee-family-seedance-prompt-zh` | 提示词 |
+| 11 | `seedance2-prompt-skill` | 提示词方法论 |
